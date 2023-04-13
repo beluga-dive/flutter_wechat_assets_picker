@@ -15,6 +15,8 @@ import '../delegates/sort_path_delegate.dart';
 import '../internal/singleton.dart';
 import '../models/path_wrapper.dart';
 
+bool guardMaybePop = false;
+
 /// [ChangeNotifier] for assets picker.
 ///
 /// The provider maintain all methods that control assets and paths.
@@ -242,9 +244,11 @@ class DefaultAssetPickerProvider
   }) {
     Singleton.sortPathDelegate = sortPathDelegate ?? SortPathDelegate.common;
     // Call [getAssetList] with route duration when constructing.
+    guardMaybePop = true;
     Future<void>.delayed(initializeDelayDuration, () async {
       await getPaths();
       await getAssetsFromCurrentPath();
+      guardMaybePop = false;
     });
   }
 
